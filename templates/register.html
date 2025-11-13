@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Weatherly{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="auth-card animate-fade-in">
+            <div class="auth-header">
+                <h2><i class="fas fa-user-plus"></i> Create Account</h2>
+                <p>Join Weatherly today!</p>
+            </div>
+            <form method="POST" class="auth-form">
+                <div class="mb-3">
+                    <label for="username" class="form-label">
+                        <i class="fas fa-user"></i> Username
+                    </label>
+                    <input type="text" class="form-control form-control-custom" id="username" name="username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">
+                        <i class="fas fa-envelope"></i> Email
+                    </label>
+                    <input type="email" class="form-control form-control-custom" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <input type="password" class="form-control form-control-custom" id="password" name="password" required>
+                </div>
+                <div class="mb-3">
+                    <label for="city" class="form-label">
+                        <i class="fas fa-map-marker-alt"></i> Preferred City
+                    </label>
+                    <select class="form-select form-control-custom" id="city" name="city">
+                        <option value="Kathmandu">Kathmandu</option>
+                        <option value="Pokhara">Pokhara</option>
+                        <option value="Lalitpur">Lalitpur</option>
+                        <option value="Bhaktapur">Bhaktapur</option>
+                        <option value="Biratnagar">Biratnagar</option>
+                        <option value="Birgunj">Birgunj</option>
+                        <option value="Dharan">Dharan</option>
+                        <option value="Bharatpur">Bharatpur</option>
+                        <option value="Janakpur">Janakpur</option>
+                        <option value="Hetauda">Hetauda</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 btn-custom">
+                    <i class="fas fa-check"></i> Create Account
+                </button>
+            </form>
+            <div class="auth-footer">
+                Already have an account? <a href="{{ url_for('login') }}">Login here</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

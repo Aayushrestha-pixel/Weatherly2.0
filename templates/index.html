@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+            <div class="hero-content animate-fade-in">
+                <h1 class="hero-title">
+                    <span class="weather-emoji">🌤️</span>
+                    Welcome to Weatherly
+                </h1>
+                <p class="hero-subtitle">Your AI-Powered Weather & Task Assistant</p>
+                <p class="hero-description">
+                    Plan your day intelligently with real-time weather analysis and personalized AI recommendations powered by Gemini
+                </p>
+                <div class="hero-buttons mt-4">
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg btn-custom me-3">
+                        <i class="fas fa-rocket"></i> Get Started
+                    </a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg btn-custom">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5 g-4">
+        <div class="col-md-4">
+            <div class="feature-card animate-slide-up" style="animation-delay: 0.1s">
+                <div class="feature-icon">📊</div>
+                <h4>Comprehensive Weather Data</h4>
+                <p>Temperature, humidity, rain chances, wind speed, and more for accurate planning</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card animate-slide-up" style="animation-delay: 0.2s">
+                <div class="feature-icon">✅</div>
+                <h4>Smart Task Management</h4>
+                <p>Add tasks and get instant AI analysis based on current weather conditions</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card animate-slide-up" style="animation-delay: 0.3s">
+                <div class="feature-icon">🤖</div>
+                <h4>AI-Powered Insights</h4>
+                <p>Gemini AI provides personalized warnings and suggestions for each task</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

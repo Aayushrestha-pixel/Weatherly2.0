@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Weatherly{% endblock %}
+
+{% block content %}
+<div class="dashboard-header animate-fade-in">
+    <h2>🌤️ Your Weather Dashboard</h2>
+    <p class="text-muted">Plan your day with AI-powered insights</p>
+</div>
+
+<div class="row g-4">
+    <!-- Weather Information Section -->
+    <div class="col-lg-8">
+        {% if weather %}
+        <div class="weather-card animate-slide-up">
+            <div class="weather-header">
+                <div>
+                    <h4>
+                        <i class="fas fa-map-marker-alt"></i> {{ weather.city }}, Nepal
+                    </h4>
+                    <p class="mb-0 text-muted">{{ weather.description }}</p>
+                </div>
+                <button class="btn btn-sm btn-light btn-custom" data-bs-toggle="modal" data-bs-target="#locationModal">
+                    <i class="fas fa-exchange-alt"></i> Change
+                </button>
+            </div>
+            
+            <div class="weather-body">
+                <div class="row">
+                    <!-- Main Temperature Display -->
+                    <div class="col-md-4 text-center weather-main">
+                        <div class="weather-emoji-large">
+                            {{ get_weather_emoji(weather.condition) }}
+                        </div>
+                        <div class="weather-temp">{{ weather.temp }}°C</div>
+                        <div class="weather-feels">Feels like {{ weather.feels_like }}°C</div>
+                        <div class="weather-minmax">
+                            <i class="fas fa-arrow-up text-danger"></i> {{ weather.temp_max }}° 
+                            <i class="fas fa-arrow-down text-info ms-2"></i> {{ weather.temp_min }}°
+                        </div>
+                    </div>
+                    
+                    <!-- Weather Metrics Grid -->
+                    <div class="col-md-8">
+                        <div class="weather-metrics">
+                            <div class="metric-item">
+                                <i class="fas fa-tint"></i>
+                                <div class="metric-content">
+                                    <small>Humidity</small>
+                                    <strong>{{ weather.humidity }}%</strong>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-item">
+                                <i class="fas fa-cloud-rain"></i>
+                                <div class="metric-content">
+                                    <small>Rain Chance</small>
+                                    <strong>{{ weather.rain_chance }}%</strong>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-item">
+                                <i class="fas fa-wind"></i>
+                                <div class="metric-content">
+                                    <small>Wind Speed</small>
+                                    <strong>{{ weather.wind_speed }} m/s</strong>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-item">
+                                <i class="fas fa-cloud"></i>
+                                <div class="metric-content">
+                                    <small>Cloud Cover</small>
+                                    <strong>{{ weather.clouds }}%</strong>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-item">
+                                <i class="fas fa-eye"></i>
+                                <div class="metric-content">
+                                    <small>Visibility</small>
+                                    <strong>{{ weather.visibility }} km</strong>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-item">
+                                <i class="fas fa-compress-arrows-alt"></i>
+                                <div class="metric-content">
+                                    <small>Pressure</small>
+                                    <strong>{{ weather.pressure }} hPa</strong>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-item">
+                                <i class="fas fa-sunrise"></i>
+                                <div class="metric-content">
+                                    <small>Sunrise</small>
+                                    <strong>{{ weather.sunrise }}</strong>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-item">
+                                <i class="fas fa-sunset"></i>
+                                <div class="metric-content">
+                                    <small>Sunset</small>
+                                    <strong>{{ weather.sunset }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-warning alert-custom">
+            <i class="fas fa-exclamation-triangle"></i> Unable to fetch weather data. Please try again later.
+        </div>
+        {% endif %}
+
+        <!-- Tasks Section -->
+        <div class="tasks-card animate-slide-up" style="animation-delay: 0.1s">
+            <div class="tasks-header">
+                <h4><i class="fas fa-tasks"></i> Your Tasks</h4>
+                <span class="badge bg-primary">{{ tasks|length }} tasks</span>
+            </div>
+            <div class="tasks-body">
+                {% if tasks %}
+                    {% for task in tasks %}
+                    <div class="task-item animate-fade-in {% if task.status == 'completed' %}task-completed{% endif %} 
+                         risk-{{ task.risk_level }}" data-task-id="{{ task.id }}">
+                        <div class="task-main">
+                            <div class="task-checkbox">
+                                <a href="{{ url_for('toggle_task', task_id=task.id) }}" class="task-toggle">
+                                    {% if task.status == 'completed' %}
+                                        <i class="fas fa-check-circle text-success"></i>
+                                    {% else %}
+                                        <i class="far fa-circle"></i>
+                                    {% endif %}
+                                </a>
+                            </div>
+                            <div class="task-content">
+                                <h5 class="task-title">{{ task.task_name }}</h5>
+                                <small class="task-time">
+                                    <i class="far fa-clock"></i> {{ task.created_at.strftime('%b %d, %Y at %I:%M %p') }}
+                                </small>
+                                
+                                <!-- AI Suggestion Box -->
+                                {% if task.ai_suggestion %}
+                                <div class="ai-suggestion-box">
+                                    <div class="ai-badge">
+                                        <i class="fas fa-robot"></i> AI Analysis
+                                    </div>
+                                    <p class="ai-text">{{ task.ai_suggestion }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="task-actions">
+                                <a href="{{ url_for('delete_task', task_id=task.id) }}" 
+                                   class="btn btn-sm btn-outline-danger btn-custom"
+                                   onclick="return confirm('🗑️ Delete this task?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h5>No tasks yet</h5>
+                        <p>Add your first task to get AI-powered weather suggestions!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Task Sidebar -->
+    <div class="col-lg-4">
+        <div class="add-task-card sticky-sidebar animate-slide-up" style="animation-delay: 0.2s">
+            <div class="add-task-header">
+                <h5><i class="fas fa-plus-circle"></i> Add New Task</h5>
+            </div>
+            <div class="add-task-body">
+                <form method="POST" action="{{ url_for('add_task') }}" id="addTaskForm">
+                    <input type="hidden" name="city" value="{{ current_city }}">
+                    <div class="mb-3">
+                        <label for="task_name" class="form-label">
+                            <i class="fas fa-pencil-alt"></i> What do you plan to do?
+                        </label>
+                        <textarea class="form-control form-control-custom" 
+                                  id="task_name" 
+                                  name="task_name" 
+                                  rows="4" 
+                                  placeholder="E.g., Go hiking at Shivapuri, Play football at the park, Morning jog around the neighborhood..."
+                                  required></textarea>
+                        <small class="form-text text-muted">
+                            <i class="fas fa-info-circle"></i> AI will analyze this task against current weather
+                        </small>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 btn-custom btn-submit" id="submitTaskBtn">
+                        <i class="fas fa-magic"></i> Add & Get AI Suggestion
+                    </button>
+                </form>
+            </div>
+            <div class="add-task-footer">
+                <small><i class="fas fa-robot"></i> Powered by Gemini AI</small>
+            </div>
+        </div>
+
+        <!-- Quick Info Card -->
+        <div class="info-card animate-slide-up" style="animation-delay: 0.3s">
+            <h6><i class="fas fa-lightbulb"></i> Pro Tips</h6>
+            <ul>
+                <li>🎯 Be specific with your tasks for better AI suggestions</li>
+                <li>⚡ Check risk levels - high risk tasks need attention!</li>
+                <li>🌤️ Weather updates every time you refresh</li>
+                <li>📍 Change location anytime to check different cities</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Location Change Modal -->
+<div class="modal fade" id="locationModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-custom">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-map-marker-alt"></i> Change Location
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('change_location') }}" id="locationForm">
+                <div class="modal-body">
+                    <label for="city_select" class="form-label">Select City in Nepal</label>
+                    <select class="form-select form-control-custom" id="city_select" name="city" required>
+                        {% for city in cities %}
+                        <option value="{{ city }}" {% if city == current_city %}selected{% endif %}>
+                            📍 {{ city }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-custom" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-custom">
+                        <i class="fas fa-check"></i> Update Location
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

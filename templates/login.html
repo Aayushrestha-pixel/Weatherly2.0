@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Weatherly{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="auth-card animate-fade-in">
+            <div class="auth-header">
+                <h2><i class="fas fa-sign-in-alt"></i> Welcome Back</h2>
+                <p>Login to your account</p>
+            </div>
+            <form method="POST" class="auth-form">
+                <div class="mb-3">
+                    <label for="username" class="form-label">
+                        <i class="fas fa-user"></i> Username
+                    </label>
+                    <input type="text" class="form-control form-control-custom" id="username" name="username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <input type="password" class="form-control form-control-custom" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 btn-custom">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+            <div class="auth-footer">
+                Don't have an account? <a href="{{ url_for('register') }}">Register here</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

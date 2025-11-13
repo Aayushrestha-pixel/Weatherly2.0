@@ -1,0 +1,850 @@
+/* ============================================
+   WEATHERLY - MAIN STYLESHEET
+   Gen Z Friendly Design with Soft Blue Gradients
+   ============================================ */
+
+   * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #cce5ff 0%, #f8f9fa 100%);
+    min-height: 100vh;
+    color: #2c3e50;
+    overflow-x: hidden;
+}
+
+.container-custom {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+
+.navbar-custom {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: white !important;
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.05);
+}
+
+.navbar-custom .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    margin: 0 10px;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    padding: 8px 15px !important;
+}
+
+.navbar-custom .nav-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.btn-nav-register {
+    background: white !important;
+    color: #667eea !important;
+    font-weight: 600 !important;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.btn-custom {
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary.btn-custom {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.btn-primary.btn-custom:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+}
+
+.btn-outline-primary.btn-custom {
+    border: 2px solid #667eea;
+    color: #667eea;
+    background: transparent;
+}
+
+.btn-outline-primary.btn-custom:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transform: translateY(-3px);
+}
+
+.btn-submit {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-submit:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-submit:hover:before {
+    width: 300px;
+    height: 300px;
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+
+.weather-card,
+.tasks-card,
+.add-task-card,
+.auth-card,
+.info-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.weather-card:hover,
+.tasks-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================
+   WEATHER CARD
+   ============================================ */
+
+.weather-card {
+    margin-bottom: 30px;
+}
+
+.weather-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.weather-header h4 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.weather-body {
+    padding: 30px;
+}
+
+.weather-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.weather-emoji-large {
+    font-size: 120px;
+    margin-bottom: 15px;
+    transition: all 0.5s ease;
+    cursor: pointer;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+}
+
+.weather-temp {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #667eea;
+    line-height: 1;
+}
+
+.weather-feels {
+    font-size: 1.1rem;
+    color: #6c757d;
+    margin-top: 10px;
+}
+
+.weather-minmax {
+    margin-top: 15px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.weather-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.metric-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.metric-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.metric-item i {
+    font-size: 2rem;
+    color: #667eea;
+}
+
+.metric-content small {
+    display: block;
+    color: #6c757d;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+}
+
+.metric-content strong {
+    font-size: 1.3rem;
+    color: #2c3e50;
+}
+
+/* ============================================
+   TASKS SECTION
+   ============================================ */
+
+.tasks-header {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    color: white;
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tasks-header h4 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.tasks-body {
+    padding: 25px;
+    max-height: 800px;
+    overflow-y: auto;
+}
+
+.task-item {
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.task-item:hover {
+    border-color: #667eea;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+}
+
+.task-main {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.task-checkbox {
+    flex-shrink: 0;
+}
+
+.task-toggle {
+    font-size: 1.8rem;
+    color: #667eea;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.task-toggle:hover {
+    transform: scale(1.2);
+    color: #764ba2;
+}
+
+.task-content {
+    flex-grow: 1;
+}
+
+.task-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.task-time {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.task-actions {
+    flex-shrink: 0;
+}
+
+.task-completed {
+    opacity: 0.6;
+    background: #f8f9fa;
+}
+
+.task-completed .task-title {
+    text-decoration: line-through;
+    color: #6c757d;
+}
+
+/* Risk Level Indicators */
+.risk-high {
+    border-left: 4px solid #dc3545 !important;
+    background: linear-gradient(to right, #fff5f5 0%, white 100%);
+}
+
+.risk-medium {
+    border-left: 4px solid #ffc107 !important;
+    background: linear-gradient(to right, #fffbf0 0%, white 100%);
+}
+
+.risk-low {
+    border-left: 4px solid #17a2b8 !important;
+    background: linear-gradient(to right, #f0f9fa 0%, white 100%);
+}
+
+/* ============================================
+   AI SUGGESTION BOX
+   ============================================ */
+
+.ai-suggestion-box {
+    margin-top: 15px;
+    padding: 20px;
+    background: linear-gradient(135deg, #e8eaf6 0%, #f3e5f5 100%);
+    border-left: 4px solid #667eea;
+    border-radius: 12px;
+    animation: fadeInUp 0.6s ease;
+}
+
+.ai-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.ai-text {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+/* ============================================
+   ADD TASK SIDEBAR
+   ============================================ */
+
+.add-task-card {
+    position: sticky;
+    top: 20px;
+}
+
+.add-task-header {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 20px 20px 0 0;
+}
+
+.add-task-header h5 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.add-task-body {
+    padding: 25px;
+}
+
+.add-task-footer {
+    padding: 15px 25px;
+    background: #f8f9fa;
+    text-align: center;
+    color: #6c757d;
+    border-radius: 0 0 20px 20px;
+}
+
+/* ============================================
+   INFO CARD
+   ============================================ */
+
+.info-card {
+    padding: 20px;
+    margin-top: 20px;
+    background: linear-gradient(135deg, #fff9e6 0%, #ffe6f0 100%);
+}
+
+.info-card h6 {
+    color: #667eea;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.info-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.info-card li {
+    padding: 8px 0;
+    color: #2c3e50;
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   FORMS
+   ============================================ */
+
+.form-control-custom,
+.form-select {
+    border-radius: 12px;
+    border: 2px solid #e9ecef;
+    padding: 14px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control-custom:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    transform: translateY(-2px);
+}
+
+.form-label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+/* ============================================
+   AUTH PAGES
+   ============================================ */
+
+.auth-card {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 0;
+}
+
+.auth-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px;
+    text-align: center;
+    border-radius: 20px 20px 0 0;
+}
+
+.auth-header h2 {
+    margin-bottom: 10px;
+}
+
+.auth-header p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+.auth-form {
+    padding: 40px;
+}
+
+.auth-footer {
+    padding: 20px;
+    text-align: center;
+    background: #f8f9fa;
+    border-radius: 0 0 20px 20px;
+}
+
+.auth-footer a {
+    color: #667eea;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+
+.hero-section {
+    padding: 60px 0;
+}
+
+.hero-content {
+    text-align: center;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.weather-emoji {
+    font-size: 4rem;
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+}
+
+.hero-subtitle {
+    font-size: 1.8rem;
+    color: #667eea;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.hero-description {
+    font-size: 1.2rem;
+    color: #6c757d;
+    max-width: 700px;
+    margin: 0 auto 30px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ============================================
+   FEATURE CARDS (HOME PAGE)
+   ============================================ */
+
+.feature-card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 20px 50px rgba(102, 126, 234, 0.3);
+}
+
+.feature-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+.feature-card h4 {
+    color: #2c3e50;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.feature-card p {
+    color: #6c757d;
+    margin: 0;
+}
+
+/* ============================================
+   ALERTS
+   ============================================ */
+
+.alert-custom {
+    border-radius: 15px;
+    border: none;
+    padding: 18px;
+    font-weight: 500;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   MODAL
+   ============================================ */
+
+.modal-custom .modal-content {
+    border-radius: 20px;
+    border: none;
+    overflow: hidden;
+}
+
+.modal-custom .modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+}
+
+.modal-custom .modal-footer {
+    border: none;
+    padding: 20px;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.animate-fade-in {
+    opacity: 0;
+    animation: fadeIn 0.8s ease forwards;
+}
+
+.animate-slide-up {
+    opacity: 0;
+    animation: slideUp 0.8s ease forwards;
+}
+
+/* ============================================
+   TOAST NOTIFICATIONS
+   ============================================ */
+
+.toast-notification {
+    position: fixed;
+    top: 100px;
+    right: 30px;
+    padding: 18px 25px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    font-weight: 600;
+    min-width: 300px;
+}
+
+.toast-notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.toast-info {
+    border-left: 4px solid #17a2b8;
+}
+
+.toast-success {
+    border-left: 4px solid #28a745;
+}
+
+.toast-warning {
+    border-left: 4px solid #ffc107;
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6c757d;
+}
+
+.empty-state i {
+    font-size: 5rem;
+    opacity: 0.3;
+    margin-bottom: 20px;
+}
+
+.empty-state h5 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+/* ============================================
+   DASHBOARD HEADER
+   ============================================ */
+
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.dashboard-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 992px) {
+    .weather-metrics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .sticky-sidebar {
+        position: relative !important;
+        top: 0 !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .weather-temp {
+        font-size: 3rem;
+    }
+    
+    .weather-emoji-large {
+        font-size: 80px;
+    }
+    
+    .metric-item {
+        padding: 15px;
+    }
+    
+    .metric-item i {
+        font-size: 1.5rem;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .toast-notification {
+        right: 10px;
+        left: 10px;
+        min-width: auto;
+    }
+}
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+
+.tasks-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.tasks-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.tasks-body::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+}
+
+.tasks-body::-webkit-scrollbar-thumb:hover {
+    background: #764ba2;
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
+.weather-loaded {
+    animation: fadeIn 0.6s ease;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.text-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.shadow-custom {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
