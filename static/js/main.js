@@ -1,10 +1,9 @@
-// Weatherly - Main JavaScript File
+// Weatherly - Minimal Design JavaScript
 
-// Wait for DOM to load
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🌤️ Weatherly loaded!');
+    console.log('🌤️ Weatherly Minimal loaded');
     
-    // Initialize all features
+    initNavbar();
     initAnimations();
     initFormValidation();
     initTaskInteractions();
@@ -12,14 +11,29 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ============================================
-// ANIMATIONS
+// NAVBAR - Scroll Effect
+// ============================================
+
+function initNavbar() {
+    const navbar = document.querySelector('.navbar-custom');
+    
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+}
+
+// ============================================
+// ANIMATIONS - Intersection Observer
 // ============================================
 
 function initAnimations() {
-    // Observe elements for fade-in animation
     const observerOptions = {
         threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        rootMargin: '0px 0px -100px 0px'
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -31,14 +45,16 @@ function initAnimations() {
         });
     }, observerOptions);
 
-    // Observe all animated elements
     document.querySelectorAll('.animate-fade-in, .animate-slide-up').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
         observer.observe(el);
     });
 }
 
 // ============================================
-// FORM VALIDATION & ENHANCEMENT
+// FORM VALIDATION
 // ============================================
 
 function initFormValidation() {
@@ -50,21 +66,17 @@ function initFormValidation() {
             
             if (taskInput.value.trim().length < 3) {
                 e.preventDefault();
-                alert('⚠️ Please enter a task with at least 3 characters');
+                showToast('⚠️ Please enter at least 3 characters', 'warning');
                 taskInput.focus();
                 return false;
             }
             
-            // Add loading state
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
-            
-            // Show a nice toast notification
             showToast('🤖 AI is analyzing your task...', 'info');
         });
     }
 
-    // Real-time character counter for task input
     const taskInput = document.getElementById('task_name');
     if (taskInput) {
         taskInput.addEventListener('input', function() {
@@ -72,9 +84,11 @@ function initFormValidation() {
             const formText = this.nextElementSibling;
             
             if (length > 0) {
-                formText.innerHTML = `<i class="fas fa-check-circle text-success"></i> ${length} characters - Looking good!`;
+                formText.innerHTML = `<i class="fas fa-check-circle"></i> ${length} characters`;
+                formText.style.color = 'var(--success)';
             } else {
-                formText.innerHTML = '<i class="fas fa-info-circle"></i> AI will analyze this task against current weather';
+                formText.innerHTML = '<i class="fas fa-info-circle"></i> AI will analyze this task';
+                formText.style.color = 'var(--text-secondary)';
             }
         });
     }
@@ -85,11 +99,10 @@ function initFormValidation() {
 // ============================================
 
 function initTaskInteractions() {
-    // Add hover effects to tasks
     const tasks = document.querySelectorAll('.task-item');
     tasks.forEach(task => {
         task.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateX(5px)';
+            this.style.transform = 'translateX(8px)';
         });
         
         task.addEventListener('mouseleave', function() {
@@ -97,25 +110,14 @@ function initTaskInteractions() {
         });
     });
 
-    // Smooth toggle animation
-    const toggleLinks = document.querySelectorAll('.task-toggle');
-    toggleLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            const taskItem = this.closest('.task-item');
-            taskItem.style.transition = 'all 0.3s ease';
-            taskItem.style.opacity = '0.5';
-        });
-    });
-
-    // Add confirmation with emoji for delete
     const deleteLinks = document.querySelectorAll('.task-actions a[href*="delete_task"]');
     deleteLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const taskName = this.closest('.task-item').querySelector('.task-title').textContent;
             
-            if (confirm(`🗑️ Are you sure you want to delete:\n"${taskName}"?`)) {
-                showToast('🗑️ Task deleted!', 'info');
+            if (confirm(`Delete "${taskName}"?`)) {
+                showToast('🗑️ Task deleted', 'info');
                 setTimeout(() => {
                     window.location.href = this.href;
                 }, 500);
@@ -129,13 +131,11 @@ function initTaskInteractions() {
 // ============================================
 
 function initWeatherUpdates() {
-    // Add refresh button functionality
     const weatherCard = document.querySelector('.weather-card');
     if (weatherCard) {
-        weatherCard.classList.add('weather-loaded');
+        weatherCard.style.animation = 'fadeIn 0.8s ease';
     }
 
-    // Location change with smooth transition
     const locationForm = document.getElementById('locationForm');
     if (locationForm) {
         locationForm.addEventListener('submit', function() {
@@ -145,24 +145,20 @@ function initWeatherUpdates() {
 }
 
 // ============================================
-// UTILITY FUNCTIONS
+// TOAST NOTIFICATIONS
 // ============================================
 
 function showToast(message, type = 'info') {
-    // Create toast element
     const toast = document.createElement('div');
     toast.className = `toast-notification toast-${type}`;
     toast.innerHTML = message;
     
-    // Add to body
     document.body.appendChild(toast);
     
-    // Trigger animation
     setTimeout(() => {
         toast.classList.add('show');
     }, 100);
     
-    // Remove after 3 seconds
     setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => {
@@ -171,56 +167,36 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
-// Add keyboard shortcuts
+// ============================================
+// KEYBOARD SHORTCUTS
+// ============================================
+
 document.addEventListener('keydown', function(e) {
-    // Ctrl/Cmd + K to focus task input
     if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
         const taskInput = document.getElementById('task_name');
         if (taskInput) {
             taskInput.focus();
-            showToast('✨ Quick add task!', 'info');
+            showToast('✨ Quick add task', 'info');
         }
     }
 });
 
-// ============================================
-// WEATHER EMOJI ANIMATIONS
-// ============================================
-
-function animateWeatherEmoji() {
-    const weatherEmoji = document.querySelector('.weather-emoji-large');
-    if (weatherEmoji) {
-        weatherEmoji.addEventListener('mouseenter', function() {
-            this.style.transform = 'scale(1.2) rotate(10deg)';
-        });
-        
-        weatherEmoji.addEventListener('mouseleave', function() {
-            this.style.transform = 'scale(1) rotate(0deg)';
-        });
-    }
-}
-
-// Initialize emoji animations
-setTimeout(animateWeatherEmoji, 500);
-
-// ============================================
-// RISK LEVEL INDICATORS
-// ============================================
-
-function highlightRiskLevels() {
-    const riskItems = document.querySelectorAll('[class*="risk-"]');
-    riskItems.forEach(item => {
-        if (item.classList.contains('risk-high')) {
-            item.style.borderLeft = '4px solid #dc3545';
-        } else if (item.classList.contains('risk-medium')) {
-            item.style.borderLeft = '4px solid #ffc107';
-        } else if (item.classList.contains('risk-low')) {
-            item.style.borderLeft = '4px solid #17a2b8';
-        }
+// Auto-hide alerts after 3 seconds
+document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('.alert-auto-hide');
+    
+    alerts.forEach(alert => {
+        // Add fade-out animation
+        setTimeout(() => {
+            alert.style.transition = 'all 0.3s ease';
+            alert.style.opacity = '0';
+            alert.style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                bsAlert.close();
+            }, 300);
+        }, 3000);
     });
-}
-
-highlightRiskLevels();
-
-console.log('✅ All JavaScript features loaded successfully!');
+});

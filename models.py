@@ -38,6 +38,15 @@ class Task(db.Model):
     risk_level = db.Column(db.String(20), default='none')  # none, low, medium, high
     status = db.Column(db.String(20), default='pending')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+     # for smart scheduling
+    suitability_score = db.Column(db.Float, default=0.0)
+    best_day_suggestion = db.Column(db.String(100), nullable=True)
+    urgency_level = db.Column(db.String(20), default='LOW')
+    last_analysis = db.Column(db.DateTime, nullable=True)
     
     def __repr__(self):
         return f'<Task {self.task_name}>'
+
+   
+    

@@ -4,7 +4,8 @@ from models import db, User, Task
 from config import Config
 import requests
 import google.generativeai as genai
-from datetime import datetime
+from weather_analyzer import WeatherAnalyzer, NotificationManager
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -116,25 +117,40 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    # Get city from query parameter or use user's preferred city
     city = request.args.get('city', current_user.preferred_city)
-    
-    # Get user's tasks
     tasks = Task.query.filter_by(user_id=current_user.id).order_by(Task.created_at.desc()).all()
     
-    # Get weather data
+    # Get current weather
     weather_data = get_weather(city)
     
-    # List of Nepal cities for dropdown
+    # Get 7-day forecast
+    forecast_data = get_7day_forecast(city)
+    
+    # Initialize analyzer
+    analyzer = WeatherAnalyzer()
+    notification_manager = NotificationManager(analyzer)
+    
+    # Generate notifications
+    notifications = []
+    if forecast_data:
+        notifications = notification_manager.generate_notifications_for_tasks(
+            tasks, 
+            forecast_data
+        )
+    
+    # Get notification summary
+    notification_summary = notification_manager.get_dashboard_summary(notifications)
+    
     nepal_cities = [
-        'Kathmandu', 'Pokhara', 'Lalitpur', 'Bhaktapur', 'Biratnagar',
-        'Birgunj', 'Dharan', 'Bharatpur', 'Janakpur', 'Hetauda',
-        'Butwal', 'Nepalgunj', 'Itahari', 'Siddharthanagar', 'Mahendranagar'
+        'Kathmandu', 'Pokhara', 'Lalitpur', 'Bhaktapur', 'Biratnagar'
     ]
     
     return render_template('dashboard.html', 
                          tasks=tasks, 
                          weather=weather_data,
+                         forecast=forecast_data,
+                         notifications=notifications,
+                         notification_summary=notification_summary,
                          current_city=city,
                          cities=nepal_cities,
                          get_weather_emoji=get_weather_emoji)
@@ -151,7 +167,6 @@ def change_location():
         flash(f'📍 Location changed to {new_city}', 'success')
     return redirect(url_for('dashboard', city=new_city))
 
-
 @app.route('/add_task', methods=['POST'])
 @login_required
 def add_task():
@@ -159,25 +174,65 @@ def add_task():
     city = request.form.get('city', current_user.preferred_city)
     
     if task_name:
-        # Get current weather
+        # Get weather and forecast
         weather_data = get_weather(city)
-        
-        # Get AI analysis for this specific task
-        ai_result = analyze_task_with_ai(task_name, weather_data, city)
-        
-        # Create task with AI suggestion
+        forecast_data = get_7day_forecast(city)
+
+        # Initialize analyzer
+        analyzer = WeatherAnalyzer()
+
+        # Calculate suitability score
+        suitability = analyzer.calculate_suitability_score(task_name, weather_data)
+
+        # Find best days
+        best_days = []
+        if forecast_data:
+            best_days = analyzer.find_best_weather_window(task_name, forecast_data)
+
+        # Calculate urgency
+        urgency_data = analyzer.calculate_task_urgency(task_name, forecast_data) if forecast_data else {'urgency_level': 'LOW'}
+
+        # Get AI analysis
+        ai_suggestion = analyze_task_with_ai(task_name, weather_data, city)
+
+        # Extract suggestion text only
+        enhanced_suggestion = ai_suggestion['suggestion']
+
+        # Append best-day recommendations if available
+        if best_days:
+            enhanced_suggestion += "\n\n📅 BEST DAYS:\n"
+            for i, day in enumerate(best_days, 1):
+                enhanced_suggestion += f"{i}. {day['day_name']} - {day['rating']} ({day['score']:.0f}% suitable)\n"
+
+        # Create task with smart data
         task = Task(
             user_id=current_user.id,
             task_name=task_name,
-            ai_suggestion=ai_result['suggestion'],
-            risk_level=ai_result['risk_level']
+            ai_suggestion=enhanced_suggestion,
+            suitability_score=suitability['score'],
+            best_day_suggestion=best_days[0]['day_name'] if best_days else None,
+            urgency_level=urgency_data['urgency_level'],
+            risk_level=determine_risk_level(suitability['score']),
+            last_analysis=datetime.utcnow()
         )
         db.session.add(task)
         db.session.commit()
-        
-        flash('✅ Task added successfully!', 'success')
+
+        flash('✅ Task added with smart scheduling analysis!', 'success')
     
     return redirect(url_for('dashboard', city=city))
+
+
+def determine_risk_level(score):
+    """Convert suitability score to risk level"""
+    if score >= 80:
+        return 'none'
+    elif score >= 60:
+        return 'low'
+    elif score >= 40:
+        return 'medium'
+    else:
+        return 'high'
 
 
 @app.route('/delete_task/<int:task_id>')
@@ -351,6 +406,60 @@ At the end, add on a new line: RISK_LEVEL: [none/low/medium/high]
             'suggestion': "✓ Task noted. Check weather conditions above for planning.",
             'risk_level': 'none'
         }
+def get_7day_forecast(city):
+    """Fetch 7-day forecast from OpenWeatherMap"""
+    api_key = app.config['OPENWEATHER_API_KEY']
+    
+    try:
+        url = 'https://api.openweathermap.org/data/2.5/forecast'
+        params = {
+            'q': f'{city},NP',
+            'appid': api_key,
+            'units': 'metric',
+            'cnt': 56  # 7 days * 8 (3-hour intervals)
+        }
+        response = requests.get(url, params=params, timeout=5)
+        response.raise_for_status()
+        data = response.json()
+        
+        # Group by day and average
+        daily_forecasts = []
+        current_day = None
+        day_data = []
+        
+        for item in data['list']:
+            date = datetime.fromtimestamp(item['dt'])
+            day = date.date()
+            
+            if current_day != day:
+                if day_data:
+                    # Calculate daily average
+                    daily_forecasts.append({
+                        'date': current_day.strftime('%Y-%m-%d'),
+                        'day_name': current_day.strftime('%A'),
+                        'temp': round(sum(d['temp'] for d in day_data) / len(day_data)),
+                        'rain_chance': int(sum(d.get('rain', 0) for d in day_data) / len(day_data) * 100),
+                        'wind_speed': round(sum(d['wind'] for d in day_data) / len(day_data), 1),
+                        'humidity': int(sum(d['humidity'] for d in day_data) / len(day_data)),
+                        'condition': day_data[0]['condition']
+                    })
+                
+                current_day = day
+                day_data = []
+            
+            day_data.append({
+                'temp': item['main']['temp'],
+                'rain': 1 if 'rain' in item else 0,
+                'wind': item['wind']['speed'],
+                'humidity': item['main']['humidity'],
+                'condition': item['weather'][0]['main'].lower()
+            })
+        
+        return daily_forecasts[:7]  # Return 7 days
+    
+    except Exception as e:
+        print(f"Forecast Error: {e}")
+        return []
 
 
 # Initialize database
@@ -360,3 +469,4 @@ with app.app_context():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+

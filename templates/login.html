@@ -3,32 +3,38 @@
 {% block title %}Login - Weatherly{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
+<div class="row justify-content-center" style="padding-top: 100px;">
     <div class="col-md-6 col-lg-5">
         <div class="auth-card animate-fade-in">
             <div class="auth-header">
-                <h2><i class="fas fa-sign-in-alt"></i> Welcome Back</h2>
-                <p>Login to your account</p>
+                <h2>Welcome Back</h2>
+                <p>Sign in to continue</p>
             </div>
             <form method="POST" class="auth-form">
                 <div class="mb-3">
-                    <label for="username" class="form-label">
-                        <i class="fas fa-user"></i> Username
-                    </label>
-                    <input type="text" class="form-control form-control-custom" id="username" name="username" required>
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" 
+                           class="form-control form-control-custom" 
+                           id="username" 
+                           name="username" 
+                           autocomplete="username"
+                           required>
                 </div>
                 <div class="mb-3">
-                    <label for="password" class="form-label">
-                        <i class="fas fa-lock"></i> Password
-                    </label>
-                    <input type="password" class="form-control form-control-custom" id="password" name="password" required>
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" 
+                           class="form-control form-control-custom password-input" 
+                           id="password" 
+                           name="password"
+                           autocomplete="current-password"
+                           required>
                 </div>
                 <button type="submit" class="btn btn-primary w-100 btn-custom">
-                    <i class="fas fa-sign-in-alt"></i> Login
+                    Sign In
                 </button>
             </form>
             <div class="auth-footer">
-                Don't have an account? <a href="{{ url_for('register') }}">Register here</a>
+                Don't have an account? <a href="{{ url_for('register') }}">Get started</a>
             </div>
         </div>
     </div>
